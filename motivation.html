@@ -41,10 +41,19 @@
     <script src="supabaseQueries.js"></script>
     <script type="module">
         import { initializeNavigation } from './js/navigation.js';
+        import { initFloatingEmojis } from './js/floatingEmojis.js';
+        
         document.addEventListener('DOMContentLoaded', () => {
             // Initialiser la navigation
             initializeNavigation();
-
+            
+            // Ajouter les emojis flottants
+            initFloatingEmojis({
+                potato: 3,  // 3 pommes de terre
+                tomato: 3,  // 3 tomates
+                heart: 4    // 4 cœurs
+            });
+            
             // Gestion du modal
             const modal = document.getElementById('addMotivationModal');
             const btn = document.getElementById('addMotivationBtn');
