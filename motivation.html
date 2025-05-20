@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivation - Boogie Training</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <main class="container">
+        <div class="page-header">
+            <h2 class="section-title">Motivation</h2>
+            <p class="section-description">Gardez votre motivation au maximum avec des citations inspirantes !</p>
+        </div>
+
+        <button id="addMotivationBtn" class="floating-button" title="Ajouter une motivation">+</button>
+
+        <div id="motivationContainer" class="motivation-grid">
+            <!-- Les motivations seront injectées ici dynamiquement -->
+            <div class="loading">Chargement des motivations...</div>
+        </div>
+    </main>
+
+    <div id="addMotivationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ajouter une motivation</h2>
+            <form id="addMotivationForm">
+                <div class="form-group">
+                    <label for="motivationText">Votre texte motivant</label>
+                    <textarea id="motivationText" rows="4" placeholder="Écrivez votre texte motivant ici..." required></textarea>
+                </div>
+                <button type="submit">Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="supabaseQueries.js"></script>
+    <script type="module">
+        import { initializeNavigation } from './js/navigation.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialiser la navigation
+            initializeNavigation();
+
+            // Gestion du modal
+            const modal = document.getElementById('addMotivationModal');
+            const btn = document.getElementById('addMotivationBtn');
+            const span = document.querySelector('.close');
+            const form = document.getElementById('addMotivationForm');
+            const container = document.getElementById('motivationContainer');
+
+            btn.onclick = () => modal.style.display = "block";
+            span.onclick = () => modal.style.display = "none";
+            window.onclick = (e) => {
+                if (e.target == modal) modal.style.display = "none";
+            };
+
+            // Fonction pour créer une carte de motivation
+            function createMotivationCard(motivation) {
+                const card = document.createElement('div');
+                card.className = 'motivation-card';
+                card.innerHTML = `
+                    <div class="quote-content">
+                        <span class="quote-mark quote-left">"</span>
+                        <p>${motivation.text}</p>
+                        <span class="quote-mark quote-right">"</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="date">${new Date(motivation.created_at).toLocaleDateString()}</span>
+                        <button class="delete-btn" data-id="${motivation.id}">
+                            <svg width="16" height="16" viewBox="0 0 16 16">
+                                <path d="M2 4h12m-9 0v8a2 2 0 002 2h4a2 2 0 002-2V4M5.333 4V2.667a1.333 1.333 0 011.334-1.334h2.666a1.333 1.333 0 011.334 1.334V4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                return card;
+            }
+
+            // Charger les motivations
+            async function loadMotivations() {
+                const { data, error } = await supabaseQueries.getAllMotivations();
+                container.innerHTML = '';
+                
+                if (error) {
+                    container.innerHTML = '<div class="error">Erreur lors du chargement des motivations</div>';
+                    return;
+                }
+
+                if (data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">Aucune motivation pour le moment. Ajoutez-en une !</div>';
+                    return;
+                }
+
+                data.forEach(motivation => {
+                    container.appendChild(createMotivationCard(motivation));
+                });
+            }
+
+            // Gérer l'ajout d'une motivation
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                const text = document.getElementById('motivationText').value;
+                
+                const { error } = await supabaseQueries.addMotivation(text);
+                if (!error) {
+                    modal.style.display = "none";
+                    form.reset();
+                    loadMotivations();
+                }
+            };
+
+            // Gérer la suppression
+            container.addEventListener('click', async (e) => {
+                if (e.target.closest('.delete-btn')) {
+                    const id = e.target.closest('.delete-btn').dataset.id;
+                    const { error } = await supabaseQueries.deleteMotivation(id);
+                    if (!error) {
+                        loadMotivations();
+                    }
+                }
+            });
+
+            // Charger les motivations au démarrage
+            loadMotivations();
+        });
+    </script>
+</body>
+</html> 

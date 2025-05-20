@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do-list - Boogie Training</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Boogie Training</h1>
+            <button class="menu-toggle" aria-label="Menu">
+                <span></span>
+            </button>
+            <nav>
+                <a href="index.html">En cours</a>
+                <a href="motivation.html">Motivation</a>
+                <a href="todolist.html" class="active">To-do-list</a>
+                <a href="all.html">Tous les reels</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2 class="section-title">To-do-list</h2>
+            <p class="section-description">Page en construction</p>
+        </div>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="supabaseQueries.js"></script>
+    <script>
+        // Script pour le menu mobile
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('nav');
+            
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                nav.classList.toggle('active');
+            });
+
+            // Fermer le menu quand on clique sur un lien
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menuToggle.classList.remove('active');
+                    nav.classList.remove('active');
+                });
+            });
+
+            // Fermer le menu quand on clique en dehors
+            document.addEventListener('click', (e) => {
+                if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
+                    menuToggle.classList.remove('active');
+                    nav.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boogie Training</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+<body>
+    
+    <main class="container">
+        <div class="page-header">
+            <h2 class="section-title">Les acros et passes en cours d'apprentissage</h2>
+            <p class="section-description">Voici les mouvements sur lesquels Tomate et Patate travaillent actuellement</p>
+        </div>
+
+        <div id="reelsContainer">
+            <!-- Les reels seront injectés ici dynamiquement -->
+            <div class="loading">Chargement des reels...</div>
+        </div>
+    </main>
+
+    <button id="addReelBtn" title="Ajouter un reel">+</button>
+
+    <div id="addReelModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ajouter un reel</h2>
+            <form id="addReelForm">
+                <div class="form-group">
+                    <label for="reelUrl">URL du reel Instagram</label>
+                    <input type="url" id="reelUrl" placeholder="https://www.instagram.com/reel/..." required>
+                </div>
+                <div class="form-group">
+                    <label for="reelTitle">Titre</label>
+                    <input type="text" id="reelTitle" placeholder="Nom du mouvement" required>
+                </div>
+                <div class="form-group">
+                    <label for="reelTags">Tags (séparés par des virgules)</label>
+                    <input type="text" id="reelTags" placeholder="footwork, toprock, power move" required>
+                </div>
+                <div class="form-group">
+                    <label for="reelStatus">Statut</label>
+                    <select id="reelStatus" required>
+                        <option value="En cours de training">En cours de training</option>
+                        <option value="Acquis">Acquis</option>
+                        <option value="A faire">A faire</option>
+                    </select>
+                </div>
+                <button type="submit">Ajouter le reel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="changeStatusModal" class="modal">
+        <div class="modal-content status-modal">
+            <span class="close close-status">&times;</span>
+            <h2>Changer le statut</h2>
+            <div class="status-options">
+                <button class="status-option" data-status="En cours de training">
+                    En cours de training
+                </button>
+                <button class="status-option" data-status="Acquis">
+                    Acquis
+                </button>
+                <button class="status-option" data-status="A faire">
+                    A faire
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="supabaseQueries.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module">
+        import { initializeNavigation } from './js/navigation.js';
+        document.addEventListener('DOMContentLoaded', initializeNavigation);
+    </script>
+</body>
+</html> 
