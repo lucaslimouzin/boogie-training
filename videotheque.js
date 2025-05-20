@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const reelsContainer = document.getElementById('reelsContainer');
     const searchInput = document.getElementById('searchInput');
     const statusFilter = document.getElementById('statusFilter');
-    let currentReelId = null;
+    
+    // Définir currentReelId comme une propriété de window pour le rendre accessible globalement
+    window.currentReelId = null;
 
     let allReels = [];
 
@@ -45,11 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const newStatus = button.dataset.status;
             
             try {
+                // Vérifier que l'ID est bien défini
+                if (!window.currentReelId) {
+                    throw new Error('ID du reel non défini');
+                }
+
                 console.log('Tentative de mise à jour du statut');
-                console.log('ID:', currentReelId);
+                console.log('ID:', window.currentReelId);
                 console.log('Nouveau statut:', newStatus);
 
-                const { error } = await supabaseQueries.updateReelStatus(currentReelId, newStatus);
+                const { error } = await supabaseQueries.updateReelStatus(window.currentReelId, newStatus);
 
                 if (error) throw error;
 

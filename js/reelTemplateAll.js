@@ -67,7 +67,16 @@ const setupEventListeners = (container) => {
         btn.addEventListener('click', (e) => {
             const reelId = e.target.dataset.reelId;
             const statusModal = document.getElementById('changeStatusModal');
-            window.currentReelId = reelId;
+            
+            // S'assurer que l'ID est un nombre
+            window.currentReelId = parseInt(reelId, 10);
+            
+            if (isNaN(window.currentReelId)) {
+                console.error('ID invalide:', reelId);
+                alert('Erreur: ID du reel invalide');
+                return;
+            }
+            
             statusModal.style.display = 'block';
         });
     });

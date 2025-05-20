@@ -160,12 +160,13 @@ const supabaseQueries = {
     // Mettre à jour les positions de plusieurs reels
     updateReelsPositions: async (updates) => {
         try {
-            const { error } = await supabase
-                .from('reels')
-                .upsert(updates.map(update => ({
-                    id: update.id,
-                    position: update.position
-                })));
+            // Utiliser une transaction pour mettre à jour toutes les positions
+            const { error } = await supabase.rpc('update_reel_positions', {
+                position_updates: updates.map(update => ({
+                    reel_id: update.id,
+                    new_position: update.position
+                }))
+            });
 
             if (error) throw error;
             return { error: null };
