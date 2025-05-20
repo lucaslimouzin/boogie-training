@@ -125,10 +125,12 @@
             // Gérer la suppression
             container.addEventListener('click', async (e) => {
                 if (e.target.closest('.delete-btn')) {
-                    const id = e.target.closest('.delete-btn').dataset.id;
-                    const { error } = await supabaseQueries.deleteMotivation(id);
-                    if (!error) {
-                        loadMotivations();
+                    if (confirm('Êtes-vous sûr de vouloir supprimer cette motivation ? Cette action est irréversible.')) {
+                        const id = e.target.closest('.delete-btn').dataset.id;
+                        const { error } = await supabaseQueries.deleteMotivation(id);
+                        if (!error) {
+                            loadMotivations();
+                        }
                     }
                 }
             });

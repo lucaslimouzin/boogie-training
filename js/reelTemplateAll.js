@@ -84,13 +84,13 @@ const setupEventListeners = (container) => {
     // Gestionnaire pour les boutons de suppression
     container.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
-            if (confirm('Êtes-vous sûr de vouloir supprimer ce reel ?')) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette vidéo ? Cette action est irréversible et supprimera définitivement la vidéo de votre bibliothèque.')) {
                 const reelId = e.target.closest('.delete-btn').dataset.reelId;
                 const { error } = await supabaseQueries.deleteReel(reelId);
                 
                 if (error) {
                     console.error('Erreur lors de la suppression:', error);
-                    alert('Erreur lors de la suppression du reel');
+                    alert('Erreur lors de la suppression de la vidéo');
                     return;
                 }
 
