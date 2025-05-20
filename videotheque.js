@@ -1,4 +1,5 @@
 import { displayReels } from './js/reelTemplateAll.js';
+import { cleanInstagramUrl } from './js/utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('addReelModal');
@@ -80,14 +81,14 @@ document.addEventListener('DOMContentLoaded', () => {
     addReelForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const reelData = {
-            url: document.getElementById('reelUrl').value,
-            title: document.getElementById('reelTitle').value,
-            tags: document.getElementById('reelTags').value.split(',').map(tag => tag.trim()),
-            status: document.getElementById('reelStatus').value
-        };
-
         try {
+            const reelData = {
+                url: cleanInstagramUrl(document.getElementById('reelUrl').value),
+                title: document.getElementById('reelTitle').value,
+                tags: document.getElementById('reelTags').value.split(',').map(tag => tag.trim()),
+                status: document.getElementById('reelStatus').value
+            };
+
             const { error } = await supabaseQueries.addReel(reelData);
 
             if (error) throw error;
@@ -100,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.style.display = 'none';
         } catch (error) {
             console.error('Erreur lors de l\'ajout du reel:', error);
-            alert('Une erreur est survenue lors de l\'ajout du reel');
+            alert('Une erreur est survenue lors de l\'ajout du reel : ' + error.message);
         }
     });
 
